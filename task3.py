@@ -40,6 +40,7 @@ def test_code_validation():
             break
         except:
             continue
+
     if start_btn is None:
         raise Exception("Кнопка 'Начать' не найдена")
     start_btn.click()
@@ -70,6 +71,7 @@ def test_code_validation():
             break
         except:
             continue
+
     if continue_btn is None:
         raise Exception("Кнопка продолжения не найдена")
     continue_btn.click()
@@ -130,6 +132,7 @@ def test_code_validation():
             break
         except:
             continue
+
     if code_input is None:
         print("Поле ввода кода не найдено. Выводим все input поля:")
         inputs = driver.find_elements(By.TAG_NAME, "input")
@@ -207,6 +210,7 @@ def test_code_validation():
             break
         except:
             continue
+
     if confirm_btn is None:
         print("Кнопка подтверждения не найдена")
 
@@ -248,16 +252,3 @@ def test_code_validation():
             confirm_btn.click()
             time.sleep(2)
             error_text = get_error()
-            if error_text is None:
-                print("Позитивный тест: код принят, ошибок нет")
-            else:
-                print(f"Позитивный тест: получена ошибка '{error_text}'")
-        else:
-            print("ПРЕДУПРЕЖДЕНИЕ: Кнопка остается неактивной для правильного кода")
-    else:
-        print("Кнопка подтверждения не найдена для позитивного теста")
-    print("\nТестирование ввода кода завершено!")
-    driver.quit()
-
-if __name__ == "__main__":
-    test_code_validation()

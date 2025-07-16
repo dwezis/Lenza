@@ -42,6 +42,7 @@ def test_email_validation():
             break
         except:
             continue
+
     if start_btn is None:
         print("Не удалось найти кнопку 'Начать'. Выводим все кнопки на странице:")
         buttons = driver.find_elements(By.TAG_NAME, "button")
@@ -94,6 +95,7 @@ def test_email_validation():
 
     email_input = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[type="email"]')))
     print("Email поле найдено")
+
     continue_btn = None
     continue_selectors = [
         'button#orum4i',
@@ -114,6 +116,7 @@ def test_email_validation():
             break
         except:
             continue
+
     if continue_btn is None:
         print("Не удалось найти кнопку продолжения. Выводим все кнопки на странице:")
         buttons = driver.find_elements(By.TAG_NAME, "button")
@@ -158,6 +161,7 @@ def test_email_validation():
         else:
             print(f"ПРОБЛЕМА: Ожидалась ошибка '{expected_error}', а получили '{error_text}'")
             continue
+
     email_input.clear()
     email_input.send_keys("test@example.com")
     time.sleep(1)

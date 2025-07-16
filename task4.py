@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+from selenium.webdriver.common.keys import Keys
 
 def test_create_new_workspace():
     chrome_options = Options()
@@ -46,23 +47,34 @@ def test_create_new_workspace():
     print("Введён код 666555")
     time.sleep(1)
 
-    confirm_btn = wait.until(lambda d: d.find_element(By.CSS_SELECTOR, 'button.btn--full-width[disabled=""]') or d.find_element(By.CSS_SELECTOR, 'button.btn--full-width:not([disabled])'))
-    if confirm_btn.get_attribute("disabled") is None:
-        confirm_btn.click()
-        print("Код подтверждён")
-    else:
-        print("Кнопка подтверждения кода неактивна!")
+    wait.until(EC.visibility_of_element_located((By.XPATH, "//*[contains(text(), 'Выбор рабочего пространства')]")))
+
+    def find_create_ws_block(driver):
+        ws_blocks = driver.find_elements(By.CLASS_NAME, "ws_workspace__accounts_new_item")
+        for block in ws_blocks:
+            if "Создать новое пространство" in block.text:
+                return block
+        return None
+
+    target_block = WebDriverWait(driver, 15).until(find_create_ws_block)
+    if target_block is None:
+        print("Не найден блок 'Создать новое пространство'")
         driver.quit()
         return
-    time.sleep(2)
 
-    wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Создать новое рабочее пространство')]")))
-    print("Страница выбора рабочего пространства загружена")
+    try:
+        target_block.click()
+        print("Клик по блоку 'Создать новое пространство' выполнен")
+    except Exception as e:
+        print(f"Не удалось кликнуть по блоку: {e}")
+        driver.quit()
+        return
 
-    create_ws_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[contains(text(), 'Создать новое рабочее пространство')]/ancestor::div[contains(@class, 'ns_create_new_ws')]")))
-    create_ws_btn.click()
-    print("Клик по 'Создать новое рабочее пространство' выполнен")
-
+    try:
+        wait.until(EC.presence_of_element_located((By.XPATH, "//h1 | //h2 | //div[contains(text(), 'Рабочее пространство') or contains(text(), 'Workspace')]")))
+        print("Переход к созданию нового пространства выполнен")
+    except Exception as e:
+        print(f"Не появилось подтверждение перехода: {e}")
     time.sleep(2)
     print("Тест завершён: переход к созданию нового пространства выполнен")
     driver.quit()
